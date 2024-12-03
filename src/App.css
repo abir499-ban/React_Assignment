@@ -1,0 +1,4 @@
+html, body {
+    height: 100%;  /* Ensure the body takes full height */
+    overflow: auto; /* Allow scrolling */
+  }

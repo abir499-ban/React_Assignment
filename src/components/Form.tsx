@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
 import { Input } from '@/components/ui/input'
 import {
     Select,
@@ -9,8 +9,10 @@ import {
 } from "@/components/ui/select"
 import { Label } from './ui/label';
 import { Button } from './ui/button';
+import ProgressContext from '../context/ProgressContext'
 
 const Form = () => {
+    const {increaseProgress} = useContext(ProgressContext)
     const Months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
     const Days = [];
     for (let i = 1; i <= 31; i++) {
@@ -153,7 +155,7 @@ const Form = () => {
                 </div>
 
                     <div className='py-3'>
-                <Button className='bg-purple-400 p-4 hover:bg-blue-700'>Next</Button></div>
+                <Button className='bg-purple-400 p-4 hover:bg-blue-700' onClick={increaseProgress}>Next</Button></div>
 
             </form>
         </>

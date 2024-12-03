@@ -19,9 +19,9 @@ const Progress = () => {
                 </div>
                 <div >
                     {steps.map((step) => (
-                        <div className='flex flex-wrap flex-cols gap-2' style={{ marginBottom: '70px' }}>
+                        <div key={step.id} className='flex flex-wrap flex-cols gap-2' style={{ marginBottom: '70px' }}>
                             <div id={step.id} className={`border-2 border-solid border-black rounded-full w-3 h-3 ${bullet >= Number(step.id) ? 'bg-black' : 'bg-white'}`} ></div>
-                            <text className='text-sm'>{step.msg}</text>
+                            <p className='text-sm'>{step.msg}</p>
                         </div>
                     ))}
 

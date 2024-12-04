@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react'
+import React, { useState, useContext, useEffect } from 'react'
 import { Input } from '@/components/ui/input'
 import {
     Select,
@@ -11,13 +11,26 @@ import { Label } from './ui/label';
 import { Button } from './ui/button';
 import ProgressContext from '../context/ProgressContext'
 
-const Form = () => {
 
+const Form = () => {
+    type  FormDataType = {
+        firstName: string;
+        middleName: string;
+        lastName: string;
+        dateofBirth: {
+            month: string;
+            day: string;
+            year: string;
+        };
+        ethnicity: string;
+        gender: string;
+        isVeteran: string;
+    };
     const handlesubmit = (e : any)=>{
         e.preventDefault();
         console.log(FormData);
     }
-    const [FormData, setFormData] = useState({
+    const DefaultFormData = {
         firstName: '',
         middleName: '',
         lastName: '',
@@ -29,8 +42,14 @@ const Form = () => {
         ethnicity: '',
         gender: '',
         isVeteran: ''
+    }
+    const savedFormData = sessionStorage.getItem('FormData') ;
+    const [FormData, setFormData] = useState<FormDataType>(()=>{
+        return savedFormData ? JSON.parse(savedFormData) : DefaultFormData
     });
-
+    useEffect(()=>{
+        sessionStorage.setItem('FormData', JSON.stringify(FormData))
+    },[FormData])
 
     const { increaseProgress , progress} = useContext(ProgressContext)
     const Months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
@@ -44,7 +63,9 @@ const Form = () => {
     }
 
     const Ethnicity = ["Hispanic or Latino", "American Indian or Alaska Native", "Asian", "White", "Black or African American", "Native Hawaiian or Other Pacific Islander"]
-    const [ethicityState, setethicityState] = useState("")
+    const [ethicityState, setethicityState] = useState(()=>{
+        return sessionStorage.getItem('ethicityState') || ''
+    })
     const selectEthnicity = (e: any) => {
         setFormData((prev)=> ({
             ...prev,
@@ -52,9 +73,14 @@ const Form = () => {
         }))
         setethicityState(e.target.value)
     }
+    useEffect(()=>{
+        sessionStorage.setItem('ethicityState',ethicityState )
+    }, [ethicityState])
 
     const Gender = ["Male", "Female", "Non Binary", "Other"];
-    const [genderState, setgenderState] = useState("")
+    const [genderState, setgenderState] = useState(()=>{
+        return sessionStorage.getItem('genderState') || ''
+    })
     const selectGender = (e: any) => {
         setFormData((prev)=> ({
             ...prev,
@@ -63,8 +89,14 @@ const Form = () => {
         setgenderState(e.target.value)
     }
 
+    useEffect(()=>{
+        sessionStorage.setItem('genderState',genderState )
+    }, [genderState])
+
     const IsVeteran = ["Yes", "No"];
-    const [isVeteranState, setisVeteranState] = useState("")
+    const [isVeteranState, setisVeteranState] = useState(()=>{
+         return sessionStorage.getItem('veteranState') || ''
+    })
     const selectVeteran = (e: any) => {
         setFormData((prev)=> ({
             ...prev,
@@ -72,6 +104,9 @@ const Form = () => {
         }))
         setisVeteranState(e.target.value)
     }
+    useEffect(()=>{
+        sessionStorage.setItem('veteranState', isVeteranState )
+    }, [isVeteranState])
 
     return (
         <>
@@ -133,7 +168,8 @@ const Form = () => {
                             </Select>
                         </div>
                         <div>
-                            <Select name='Day' onValueChange={(e) =>
+                            <Select name='Day' value={FormData.dateofBirth.day} 
+                            onValueChange={(e) =>
                                 setFormData((prev) => ({
                                     ...prev,
                                     dateofBirth: {
@@ -153,7 +189,8 @@ const Form = () => {
                             </Select>
                         </div>
                         <div>
-                            <Select name='Year' onValueChange={(e) =>
+                            <Select name='Year'  value={FormData.dateofBirth.year}
+                            onValueChange={(e) =>
                                 setFormData((prev) => ({
                                     ...prev,
                                     dateofBirth: {
@@ -211,29 +248,19 @@ const Form = () => {
                     </div>
                 </div>
 
-                <div className='py-2'>
+                <div className='py-4'>
                     <p className='text-sm font-semibold'>Are you a veteran?</p>
                     <div className='flex flex-wrap flex-row gap-2'>
-                        <label 
-                        key="Yes"
-                        className={
-                            isVeteranState === "Yes"
-                                ? 'text-sm border-solid border-2 border-white p-4 bg-green-900 rounded-lg text-white  flex-1 text-center'
-                                : 'text-sm border-solid border-2 border-white p-4 bg-white rounded-lg text-black hover:cursor-pointer hover:bg-gray-100 flex-1 text-center'
-                        }>
-                            <input type='radio' name="IsVeteran" value="Yes" className='hidden' onChange={selectVeteran} />
-                            Yes
-                        </label>
-                        <label 
-                        key="No"
-                        className={
-                            isVeteranState === "No"
+                        {IsVeteran.map((option)=>(
+                            <label key={option} className={isVeteranState === option
                                 ? 'text-sm border-solid border-2 border-white p-4 bg-green-900 rounded-lg text-white  flex-1 text-center'
                                 : 'text-sm border-solid border-2 border-white p-4 bg-white rounded-lg text-black hover:cursor-pointer hover:bg-gray-100  flex-1 text-center'
-                        }>
-                            <input type='radio' name="IsVeteran" value="No" className='hidden' onChange={selectVeteran} />
-                            No
-                        </label>
+                            }>
+                                {option}
+                                <input type='radio' name="IsVeteran" value={option} className='hidden' onChange={selectVeteran}/>
+                            </label>
+                        ))}
+                       
                     </div>
 
                 </div>

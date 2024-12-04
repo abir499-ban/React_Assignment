@@ -113,7 +113,7 @@ const Form = () => {
             <form>
 
                 <p className='text-4xl'>Personal Details</p>
-                <p className='text-2xl line'>This helps us to build your profile and find services you are eligible for</p>
+                <p className='text-2xl line text-gray-600'>This helps us to build your profile and find services you are eligible for</p>
 
                 <div className='py-20'>
                     <p className='font-bold text-sm'>What is your name?</p>
